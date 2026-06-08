@@ -165,6 +165,81 @@
     fill: var(--gray-900);
   }
 
+  .buy-section {
+    margin-top: 2.5rem;
+    width: 100%;
+    text-align: left;
+  }
+
+  .buy-heading {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--gray-400);
+    margin: 0 0 1rem;
+    text-align: center;
+  }
+
+  .buy-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+  }
+
+  .retailer-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.875rem 1.125rem;
+    border-radius: 0.75rem;
+    border: 1px solid color-mix(in srgb, var(--gray-400) 25%, transparent);
+    background: color-mix(in srgb, var(--retailer-accent) 4%, transparent);
+    color: var(--gray-900);
+    text-decoration: none;
+    transition: border-color 0.2s ease, background 0.2s ease, transform 0.15s ease;
+  }
+
+  .retailer-link:hover {
+    border-color: color-mix(in srgb, var(--retailer-accent) 40%, transparent);
+    background: color-mix(in srgb, var(--retailer-accent) 10%, transparent);
+    transform: translateY(-1px);
+  }
+
+  .retailer-link:focus-visible {
+    outline: 2px solid var(--retailer-accent);
+    outline-offset: 2px;
+  }
+
+  .retailer-link:nth-child(1) {
+    --retailer-accent: var(--french-violet);
+  }
+
+  .retailer-link:nth-child(2) {
+    --retailer-accent: var(--bright-blue);
+  }
+
+  .retailer-link:nth-child(3) {
+    --retailer-accent: var(--orange-red);
+  }
+
+  .retailer-name {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    letter-spacing: -0.01rem;
+  }
+
+  .retailer-arrow {
+    flex-shrink: 0;
+    color: var(--retailer-accent);
+    transition: transform 0.2s ease;
+  }
+
+  .retailer-link:hover .retailer-arrow {
+    transform: translate(2px, -2px);
+  }
+
   @media screen and (max-width: 650px) {
     .content {
       flex-direction: column;
@@ -185,8 +260,47 @@
     <div class="left-side">
       <h1>{{ title() }}</h1>
       <img class="feature-image" src="sun-color-2020-09-26.jpg" alt="A beautiful sunset">
-    </div>
-    <div class="right-side">
+      <section class="buy-section" aria-labelledby="buy-heading">
+        <h2 id="buy-heading" class="buy-heading">Buy the Book</h2>
+        <div class="buy-links">
+          <a
+            class="retailer-link"
+            href="https://www.barnesandnoble.com/w/strolling-adventure-gloria-taylor-crone/1150109647?ean=9798868529849"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span class="retailer-name">Barnes &amp; Noble</span>
+            <svg class="retailer-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M7 17L17 7"/>
+              <path d="M7 7h10v10"/>
+            </svg>
+          </a>
+          <a
+            class="retailer-link"
+            href="https://www.amazon.com/Strolling-Adventure-Gloria-Taylor-Crone/dp/B0GZSG2LFR/ref=sr_1_1?crid=28FRIGUL1Y399&dib=eyJ2IjoiMSJ9.p18bx7Qn8Er_FrOP14zFOw.l5Vzxd9u997CsIhV9_qKoGvzGyjk6Ak0_V1YpTyqYiM&dib_tag=se&keywords=9798868529849&qid=1778264024&s=digital-text&sprefix=9798868529849%2Cdigital-text%2C154&sr=1-1"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span class="retailer-name">Amazon</span>
+            <svg class="retailer-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M7 17L17 7"/>
+              <path d="M7 7h10v10"/>
+            </svg>
+          </a>
+          <a
+            class="retailer-link"
+            href="https://bookstore.xulonpress.com/bookdetail.php?PB_ISBN=9798868529849&HC_ISBN=9798868529856"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span class="retailer-name">Xulon Press</span>
+            <svg class="retailer-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M7 17L17 7"/>
+              <path d="M7 7h10v10"/>
+            </svg>
+          </a>
+        </div>
+      </section>
     </div>
   </div>
 </main>
