@@ -1,0 +1,155 @@
+<section class="ws-page" [class.show-answer]="showing()">
+  <header class="ws-header">
+    <a routerLink="/" class="back-link no-print">&larr; Back to home</a>
+    <h1>Help GiGi Find Her Words!</h1>
+    <p class="sub">
+      Find every hidden word &mdash; <strong>drag</strong> across the letters to circle each one!
+    </p>
+    <p class="score">
+      Score: <strong>{{ score() }}</strong>
+      <span class="progress">&middot; {{ foundWords().size }} / {{ words().length }} found</span>
+    </p>
+  </header>
+
+  @if (lastWord() && !won()) {
+    <p class="last-found no-print" role="status" aria-live="polite">
+      Nice! You found <strong>{{ lastWord() }}</strong> &nbsp;+{{ lastAward() }}
+    </p>
+  }
+
+  <div
+    class="grid-wrap no-select"
+    (pointerdown)="onPointerDown($event)"
+    (pointermove)="onPointerMove($event)"
+    (pointerup)="onPointerUp($event)"
+    (pointercancel)="onPointerUp($event)"
+    (pointerleave)="onPointerUp($event)"
+  >
+    <table class="grid" [style.--cols]="size()">
+      <tbody>
+        @for (row of grid(); track $index; let r = $index) {
+          <tr>
+            @for (cell of row; track $index; let c = $index) {
+              <td
+                [attr.data-r]="r"
+                [attr.data-c]="c"
+                [class.answer]="cell.answer"
+                [class.found]="foundCells().has(r * size() + c)"
+                [class.sel]="selCells().has(r * size() + c)"
+              >{{ cell.letter }}</td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  @if (won()) {
+    <div class="win-banner" role="status" aria-live="polite">
+      <span class="win-title">You found them all! &#11088;</span>
+      <span class="win-points">Total score: {{ score() }}</span>
+      <p class="win-ask">Want to try another one?</p>
+      <div class="win-actions">
+        <button type="button" class="control-card control-card-featured no-print" (click)="newPuzzle()">
+          <svg class="control-icon" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="23 4 23 10 17 10"/>
+            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+          </svg>
+          <span class="control-text">
+            <span class="control-name">Yes, new puzzle!</span>
+          </span>
+          <svg class="control-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M7 17L17 7"/>
+            <path d="M7 7h10v10"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  }
+
+  <p class="tip no-print">Tip: Drag your mouse (or your finger on a tablet) across a word to circle it!</p>
+
+  <div class="words-section">
+    <h2 class="words-label">Find these words</h2>
+    <ul class="word-list">
+      @for (word of words(); track word) {
+        <li [class.struck]="foundWords().has(word)">{{ word }}</li>
+      }
+    </ul>
+  </div>
+
+  <footer class="controls no-print">
+    <h2 class="controls-heading">Options</h2>
+    <div class="controls-grid">
+      <div class="control-card control-card-static">
+        <svg class="control-icon" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="4" y1="21" x2="4" y2="14"/>
+          <line x1="4" y1="10" x2="4" y2="3"/>
+          <line x1="12" y1="21" x2="12" y2="12"/>
+          <line x1="12" y1="8" x2="12" y2="3"/>
+          <line x1="20" y1="21" x2="20" y2="16"/>
+          <line x1="20" y1="12" x2="20" y2="3"/>
+          <line x1="1" y1="14" x2="7" y2="14"/>
+          <line x1="9" y1="8" x2="15" y2="8"/>
+          <line x1="17" y1="16" x2="23" y2="16"/>
+        </svg>
+        <div class="control-text">
+          <span class="control-name">Difficulty</span>
+          <div class="difficulty-pills" role="group" aria-label="Difficulty">
+            <button type="button" class="difficulty-pill" [class.active]="difficulty() === 'easy'" (click)="setDiff('easy')">Easy</button>
+            <button type="button" class="difficulty-pill" [class.active]="difficulty() === 'medium'" (click)="setDiff('medium')">Medium</button>
+            <button type="button" class="difficulty-pill" [class.active]="difficulty() === 'hard'" (click)="setDiff('hard')">Hard</button>
+          </div>
+        </div>
+      </div>
+
+      <button type="button" class="control-card" (click)="toggleAnswer()">
+        <svg class="control-icon" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+          <circle cx="12" cy="12" r="3"/>
+        </svg>
+        <span class="control-text">
+          <span class="control-name">{{ showing() ? 'Hide answer' : 'Show answer' }}</span>
+          <span class="control-desc">{{ showing() ? 'Cover up the hidden words' : 'Reveal where every word is hidden' }}</span>
+        </span>
+        <svg class="control-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M7 17L17 7"/>
+          <path d="M7 7h10v10"/>
+        </svg>
+      </button>
+
+      <button type="button" class="control-card" (click)="print()">
+        <svg class="control-icon" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="6 9 6 2 18 2 18 9"/>
+          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+          <rect x="6" y="14" width="12" height="8"/>
+        </svg>
+        <span class="control-text">
+          <span class="control-name">Print</span>
+          <span class="control-desc">Print this puzzle to solve on paper</span>
+        </span>
+        <svg class="control-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M7 17L17 7"/>
+          <path d="M7 7h10v10"/>
+        </svg>
+      </button>
+
+      <button type="button" class="control-card control-card-featured" (click)="newPuzzle()">
+        <svg class="control-icon" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="23 4 23 10 17 10"/>
+          <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+        </svg>
+        <span class="control-text">
+          <span class="control-name">New puzzle</span>
+          <span class="control-desc">Get a fresh set of words at the same difficulty</span>
+        </span>
+        <svg class="control-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M7 17L17 7"/>
+          <path d="M7 7h10v10"/>
+        </svg>
+      </button>
+    </div>
+  </footer>
+
+  <footer class="print-footer">www.strollingadventure.com</footer>
+</section>

@@ -1,0 +1,246 @@
+:host {
+  --bright-blue: oklch(51.01% 0.274 263.83);
+  --electric-violet: oklch(53.18% 0.28 296.97);
+  --french-violet: oklch(47.66% 0.246 305.88);
+  --vivid-pink: oklch(69.02% 0.277 332.77);
+  --hot-red: oklch(61.42% 0.238 15.34);
+  --orange-red: oklch(63.32% 0.24 31.68);
+
+  --gray-900: oklch(19.37% 0.006 300.98);
+  --gray-700: oklch(36.98% 0.014 302.71);
+  --gray-400: oklch(70.9% 0.015 304.04);
+
+  --red-to-pink-to-purple-vertical-gradient: linear-gradient(
+    180deg,
+    var(--orange-red) 0%,
+    var(--vivid-pink) 50%,
+    var(--electric-violet) 100%
+  );
+
+  --red-to-pink-to-purple-horizontal-gradient: linear-gradient(
+    90deg,
+    var(--orange-red) 0%,
+    var(--vivid-pink) 50%,
+    var(--electric-violet) 100%
+  );
+
+  --pill-accent: var(--bright-blue);
+
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol";
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1 {
+  font-size: 3.125rem;
+  color: var(--gray-900);
+  font-weight: 500;
+  line-height: 100%;
+  letter-spacing: -0.125rem;
+  margin: 0;
+  font-family: "Inter Tight", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol";
+}
+
+p {
+  margin: 0;
+  color: var(--gray-700);
+}
+
+main {
+  width: 100%;
+  min-height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  box-sizing: inherit;
+  position: relative;
+}
+
+.content {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  max-width: 700px;
+  margin-bottom: 3rem;
+}
+
+.left-side {
+  text-align: center;
+}
+
+.feature-image {
+  width: 100%;
+  height: auto;
+  margin-top: 2rem;
+}
+
+.buy-section {
+  margin-top: 2.5rem;
+  width: 100%;
+  text-align: left;
+}
+
+.buy-heading {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--gray-400);
+  margin: 0 0 1rem;
+  text-align: center;
+}
+
+.buy-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.retailer-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.875rem 1.125rem;
+  border-radius: 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--gray-400) 25%, transparent);
+  background: color-mix(in srgb, var(--retailer-accent) 4%, transparent);
+  color: var(--gray-900);
+  text-decoration: none;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.15s ease;
+}
+
+.retailer-link:hover {
+  border-color: color-mix(in srgb, var(--retailer-accent) 40%, transparent);
+  background: color-mix(in srgb, var(--retailer-accent) 10%, transparent);
+  transform: translateY(-1px);
+}
+
+.retailer-link:focus-visible {
+  outline: 2px solid var(--retailer-accent);
+  outline-offset: 2px;
+}
+
+.retailer-link:nth-child(1) {
+  --retailer-accent: var(--french-violet);
+}
+
+.retailer-link:nth-child(2) {
+  --retailer-accent: var(--bright-blue);
+}
+
+.retailer-link:nth-child(3) {
+  --retailer-accent: var(--orange-red);
+}
+
+.retailer-name {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  letter-spacing: -0.01rem;
+}
+
+.retailer-arrow {
+  flex-shrink: 0;
+  color: var(--retailer-accent);
+  transition: transform 0.2s ease;
+}
+
+.retailer-link:hover .retailer-arrow {
+  transform: translate(2px, -2px);
+}
+
+/* ── Activities section ──────────────────────────────────────────────── */
+.activities-section {
+  margin-top: 3rem;
+  width: 100%;
+  text-align: left;
+}
+
+.activities-heading {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--gray-400);
+  margin: 0 0 1rem;
+  text-align: center;
+}
+
+.activities-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.activity-card {
+  --activity-accent: oklch(51% 0.14 268);
+
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.125rem;
+  border-radius: 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--gray-400) 25%, transparent);
+  background: color-mix(in srgb, var(--activity-accent) 4%, transparent);
+  color: var(--gray-900);
+  text-decoration: none;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.15s ease;
+}
+
+.activity-card:hover {
+  border-color: color-mix(in srgb, var(--activity-accent) 35%, transparent);
+  background: color-mix(in srgb, var(--activity-accent) 8%, transparent);
+  transform: translateY(-1px);
+}
+
+.activity-card:focus-visible {
+  outline: 2px solid var(--activity-accent);
+  outline-offset: 2px;
+}
+
+.activity-icon {
+  flex-shrink: 0;
+  color: var(--activity-accent);
+}
+
+.activity-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.activity-name {
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.01rem;
+}
+
+.activity-desc {
+  font-size: 0.8125rem;
+  color: var(--gray-700);
+}
+
+.activity-arrow {
+  margin-left: auto;
+  flex-shrink: 0;
+  color: var(--activity-accent);
+  transition: transform 0.2s ease;
+}
+
+.activity-card:hover .activity-arrow {
+  transform: translate(2px, -2px);
+}
+
+@media screen and (max-width: 650px) {
+  .content {
+    flex-direction: column;
+    width: max-content;
+    max-width: 100%;
+  }
+}

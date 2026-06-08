@@ -1,0 +1,160 @@
+<section class="maze-page">
+  <header class="maze-header">
+    <a routerLink="/" class="back-link no-print">&larr; Back to home</a>
+    <h1>Help GiGi Find Her Way Out!</h1>
+    <p class="sub">
+      Get from <strong>START</strong> to <strong>END</strong> &mdash; the big rooms won't help you get there!
+    </p>
+    <p class="score">Score: <strong>{{ score() }}</strong></p>
+  </header>
+
+  <div class="canvas-wrap">
+    <canvas
+      #mc
+      (pointerdown)="onPointerDown($event)"
+      (pointermove)="onPointerMove($event)"
+      (pointerup)="onPointerUp($event)"
+      (pointercancel)="onPointerUp($event)"
+      (pointerleave)="onPointerUp($event)"
+    ></canvas>
+  </div>
+
+  @if (won()) {
+    <div class="win-banner" role="status" aria-live="polite">
+      <span class="win-title">You made it through! &#11088;</span>
+      <span class="win-points">+{{ lastAward() }} points &middot; Total score: {{ score() }}</span>
+      <p class="win-ask">Want to try another one?</p>
+      <div class="win-actions">
+        <button type="button" class="control-card control-card-featured" (click)="newMaze()">
+          <svg class="control-icon" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="1"/>
+            <path d="M3 9h6V3"/>
+            <path d="M21 9h-6"/>
+            <path d="M9 9v6"/>
+            <path d="M15 9v12"/>
+            <path d="M9 15h6"/>
+            <path d="M3 15h2"/>
+          </svg>
+          <span class="control-text">
+            <span class="control-name">Yes, new maze!</span>
+          </span>
+          <svg class="control-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M7 17L17 7"/>
+            <path d="M7 7h10v10"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  }
+
+  @if (hint() && !won()) {
+    <div class="hint-banner no-print" role="status" aria-live="polite">
+      <span class="hint-icon" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+      </span>
+      <p class="hint-text">{{ hint() }}</p>
+    </div>
+  }
+
+  <p class="tip no-print">Tip: Drag your mouse (or your finger on a tablet) to trace a path from START to END!</p>
+
+  <footer class="controls no-print">
+    <h2 class="controls-heading">Options</h2>
+    <div class="controls-grid">
+      <div class="control-card control-card-static">
+        <svg class="control-icon" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="4" y1="21" x2="4" y2="14"/>
+          <line x1="4" y1="10" x2="4" y2="3"/>
+          <line x1="12" y1="21" x2="12" y2="12"/>
+          <line x1="12" y1="8" x2="12" y2="3"/>
+          <line x1="20" y1="21" x2="20" y2="16"/>
+          <line x1="20" y1="12" x2="20" y2="3"/>
+          <line x1="1" y1="14" x2="7" y2="14"/>
+          <line x1="9" y1="8" x2="15" y2="8"/>
+          <line x1="17" y1="16" x2="23" y2="16"/>
+        </svg>
+        <div class="control-text">
+          <span class="control-name">Difficulty</span>
+          <div class="difficulty-pills" role="group" aria-label="Difficulty">
+            <button type="button" class="difficulty-pill" [class.active]="difficulty() === 'easy'" (click)="setDiff('easy')">Easy</button>
+            <button type="button" class="difficulty-pill" [class.active]="difficulty() === 'medium'" (click)="setDiff('medium')">Medium</button>
+            <button type="button" class="difficulty-pill" [class.active]="difficulty() === 'hard'" (click)="setDiff('hard')">Hard</button>
+          </div>
+        </div>
+      </div>
+
+      <button type="button" class="control-card" (click)="print()">
+        <svg class="control-icon" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="6 9 6 2 18 2 18 9"/>
+          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+          <rect x="6" y="14" width="12" height="8"/>
+        </svg>
+        <span class="control-text">
+          <span class="control-name">Print</span>
+          <span class="control-desc">Print this maze to solve on paper</span>
+        </span>
+        <svg class="control-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M7 17L17 7"/>
+          <path d="M7 7h10v10"/>
+        </svg>
+      </button>
+
+      <button type="button" class="control-card" (click)="clearPath()">
+        <svg class="control-icon" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 6h18"/>
+          <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+          <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+        </svg>
+        <span class="control-text">
+          <span class="control-name">Clear path</span>
+          <span class="control-desc">Erase your traced route and start over</span>
+        </span>
+        <svg class="control-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M7 17L17 7"/>
+          <path d="M7 7h10v10"/>
+        </svg>
+      </button>
+
+      <button type="button" class="control-card" (click)="toggle()">
+        <svg class="control-icon" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+          <circle cx="12" cy="12" r="3"/>
+        </svg>
+        <span class="control-text">
+          <span class="control-name">{{ showing() ? 'Hide answer' : 'Show answer' }}</span>
+          <span class="control-desc">{{ showing() ? 'Cover up the solution path' : 'Peek at the correct route' }}</span>
+        </span>
+        <svg class="control-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M7 17L17 7"/>
+          <path d="M7 7h10v10"/>
+        </svg>
+      </button>
+
+      <button type="button" class="control-card control-card-featured" (click)="newMaze()">
+        <svg class="control-icon" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="1"/>
+          <path d="M3 9h6V3"/>
+          <path d="M21 9h-6"/>
+          <path d="M9 9v6"/>
+          <path d="M15 9v12"/>
+          <path d="M9 15h6"/>
+          <path d="M3 15h2"/>
+        </svg>
+        <span class="control-text">
+          <span class="control-name">New maze</span>
+          <span class="control-desc">Generate a fresh puzzle at the same difficulty</span>
+        </span>
+        <svg class="control-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M7 17L17 7"/>
+          <path d="M7 7h10v10"/>
+        </svg>
+      </button>
+    </div>
+  </footer>
+
+  <footer class="print-footer">www.strollingadventure.com</footer>
+</section>

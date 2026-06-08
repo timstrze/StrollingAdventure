@@ -1,1 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* Footer URL shown only on the printed page (hidden on screen). */
+.print-footer {
+  display: none;
+}
+
+@media print {
+  .print-footer {
+    display: block;
+    margin-top: 1.5rem;
+    text-align: center;
+    font-size: 0.875rem;
+    color: #000;
+  }
+}
