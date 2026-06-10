@@ -78,6 +78,7 @@ export class WordSearch {
   readonly lastWord = signal('');
 
   private puzzleIndex = 0;
+  private readonly shuffleSeed = Math.floor(Math.random() * 0xffffffff);
   private placed: Placed[] = [];
   private drawing = false;
   private startCell: { r: number; c: number } | null = null;
@@ -110,7 +111,7 @@ export class WordSearch {
   // Pick the next batch of fitting words for the chosen difficulty.
   private pickWords(puzzleIndex: number, cfg: DiffConfig): string[] {
     const pool = WORD_DB.filter((w) => w.length <= cfg.size);
-    const order = this.shuffled(pool, this.mulberry32(1234));
+    const order = this.shuffled(pool, this.mulberry32(this.shuffleSeed));
     const start = (puzzleIndex * cfg.count) % order.length;
     const batch: string[] = [];
     for (let i = 0; i < cfg.count; i++) {
