@@ -25,7 +25,7 @@ A simple and visually appealing single-page Angular application. It displays a t
 
 *   **Home Page:**
     *   Displays the application title.
-    *   Displays a feature image (`sun-color-2020-09-26.jpg`).
+    *   Displays the book cover illustration (`cover-spread.png`).
     *   The image is responsive and fits the screen width.
 
 ## Current Plan

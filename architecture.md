@@ -107,7 +107,8 @@ StrollingAdventure/
 ├── .vscode/                 # Editor tasks, launch configs (committed)
 ├── public/                  # Static assets copied verbatim to build output
 │   ├── favicon.ico
-│   └── sun-color-2020-09-26.jpg
+│   ├── cover-spread.png
+│   └── maze/                # Maze activity illustration assets
 ├── src/
 │   ├── index.html           # Shell document; mounts <app-root>
 │   ├── main.ts              # Application entry point
@@ -324,7 +325,7 @@ Assets in `public/` are copied to the build output root by `angular.json`:
 | Asset | Referenced as | Notes |
 |-------|---------------|-------|
 | `public/favicon.ico` | `/favicon.ico` | Linked from `index.html` |
-| `public/sun-color-2020-09-26.jpg` | `sun-color-2020-09-26.jpg` | Feature image on home view |
+| `public/cover-spread.png` | `cover-spread.png` | Book cover illustration on home view |
 
 Reference public assets with **root-relative paths** (no `public/` prefix in templates).
 
