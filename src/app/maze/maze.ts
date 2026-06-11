@@ -1,12 +1,18 @@
+import { isPlatformBrowser } from '@angular/common';
 import {
   AfterViewInit,
   Component,
   ElementRef,
+  inject,
+  OnInit,
+  PLATFORM_ID,
   signal,
   ViewChild,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { loadHighScore, saveHighScoreIfBetter } from '../game-scores';
+import { SeoService } from '../seo/seo.service';
+import { SiteFooter } from '../shared/site-footer/site-footer';
 
 type Difficulty = 'easy' | 'medium' | 'hard';
 
@@ -37,12 +43,15 @@ const DIRS = [N, E, S, W];
 @Component({
   selector: 'app-maze',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, SiteFooter],
   templateUrl: './maze.html',
   styleUrl: './maze.css',
 })
-export class Maze implements AfterViewInit {
+export class Maze implements OnInit, AfterViewInit {
   @ViewChild('mc') canvasRef!: ElementRef<HTMLCanvasElement>;
+
+  private readonly seo = inject(SeoService);
+  private readonly platformId = inject(PLATFORM_ID);
 
   readonly difficulty = signal<Difficulty>('medium');
   readonly showing = signal(false);
@@ -92,7 +101,18 @@ export class Maze implements AfterViewInit {
   private images: HTMLImageElement[] = [];
   private roomImages: HTMLImageElement[] = [];
 
+  ngOnInit(): void {
+    this.seo.update({
+      title: 'Printable Maze — Help GiGi Find Her Way | Strolling Adventure',
+      description:
+        'Free printable maze based on Strolling Adventure — help GiGi find her way from START to END. Play online or print at Easy, Medium, or Hard difficulty.',
+      path: '/maze',
+    });
+    this.seo.clearJsonLd();
+  }
+
   ngAfterViewInit(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     this.ctx = this.canvasRef.nativeElement.getContext('2d')!;
     this.loadImages();
     this.applyDiff(this.difficulty());

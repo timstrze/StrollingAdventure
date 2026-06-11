@@ -1,6 +1,8 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { loadHighScore, saveHighScoreIfBetter } from '../game-scores';
+import { SeoService } from '../seo/seo.service';
+import { SiteFooter } from '../shared/site-footer/site-footer';
 
 interface Cell {
   letter: string;
@@ -60,11 +62,13 @@ const WORD_DB = [
 @Component({
   selector: 'app-wordsearch',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, SiteFooter],
   templateUrl: './wordsearch.html',
   styleUrl: './wordsearch.css',
 })
-export class WordSearch {
+export class WordSearch implements OnInit {
+  private readonly seo = inject(SeoService);
+
   readonly difficulty = signal<Difficulty>('medium');
   readonly size = signal(DIFFS.medium.size);
   readonly grid = signal<Cell[][]>([]);
@@ -90,6 +94,16 @@ export class WordSearch {
 
   constructor() {
     this.render();
+  }
+
+  ngOnInit(): void {
+    this.seo.update({
+      title: 'Word Search — Find Words from the Book | Strolling Adventure',
+      description:
+        'Free word search puzzle with words from Strolling Adventure — find sun, squirrels, honeybees, Yorktown, and more. Play online or print it!',
+      path: '/wordsearch',
+    });
+    this.seo.clearJsonLd();
   }
 
   // ── Seeded RNG (mulberry32) ──────────────────────────────────────────────────

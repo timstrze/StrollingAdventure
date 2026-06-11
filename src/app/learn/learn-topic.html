@@ -1,0 +1,39 @@
+<main class="content-page">
+  <a routerLink="/learn" class="back-link">&larr; Back to learn</a>
+
+  @if (topic) {
+    <h1>{{ topic.title }}</h1>
+
+    @for (para of topic.paragraphs; track $index) {
+      <p>{{ para }}</p>
+    }
+
+    <div class="callout">
+      <p class="callout-label">In the book</p>
+      <p style="margin: 0; font-style: italic;">"{{ topic.inBook }}"</p>
+    </div>
+
+    @if (topic.source) {
+      <p>
+        Learn more:
+        <a [href]="topic.source.url" target="_blank" rel="noopener noreferrer">{{
+          topic.source.label
+        }}</a>
+      </p>
+    }
+
+    <p>
+      <a [routerLink]="topic.cta.route" class="text-link">{{ topic.cta.label }} &rarr;</a>
+    </p>
+
+    <p>
+      <a routerLink="/about" class="text-link">Read about Strolling Adventure &rarr;</a>
+    </p>
+  } @else {
+    <h1>Topic not found</h1>
+    <p>Sorry, we couldn't find that nature topic.</p>
+    <a routerLink="/learn" class="text-link">Browse all topics &rarr;</a>
+  }
+
+  <app-site-footer />
+</main>

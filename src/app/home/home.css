@@ -35,6 +35,7 @@
   display: block;
   background: var(--page-bg);
   min-height: 100vh;
+  --activity-accent: oklch(51% 0.14 268);
 }
 
 .page-title {
@@ -97,6 +98,61 @@ main {
   height: auto;
   margin: 2rem auto 0;
   border: 2px solid var(--gray-400);
+}
+
+.about-section,
+.learn-section {
+  margin-top: 2.5rem;
+  width: 100%;
+  text-align: left;
+}
+
+.section-heading {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 0 0 1rem;
+  text-align: center;
+}
+
+.section-heading a {
+  color: var(--gray-700);
+  text-decoration: none;
+}
+
+.section-heading a:hover {
+  color: var(--activity-accent, oklch(51% 0.14 268));
+  text-decoration: underline;
+}
+
+.section-text {
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  color: var(--gray-700);
+  margin: 0 0 0.75rem;
+  text-align: center;
+}
+
+.inline-link {
+  color: var(--activity-accent, oklch(51% 0.14 268));
+  text-decoration: none;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.inline-link:hover {
+  text-decoration: underline;
+}
+
+.activities-heading a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.activities-heading a:hover {
+  color: var(--activity-accent, oklch(51% 0.14 268));
+  text-decoration: underline;
 }
 
 .buy-section {

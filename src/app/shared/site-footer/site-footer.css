@@ -1,0 +1,32 @@
+.site-footer {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid color-mix(in srgb, var(--gray-400) 30%, transparent);
+  text-align: center;
+}
+
+.site-footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.site-footer-nav a {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--gray-700);
+  text-decoration: none;
+}
+
+.site-footer-nav a:hover {
+  color: var(--activity-accent, oklch(51% 0.14 268));
+  text-decoration: underline;
+}
+
+.site-footer-url {
+  font-size: 0.75rem;
+  color: var(--gray-400);
+  margin: 0;
+}

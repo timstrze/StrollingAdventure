@@ -5,7 +5,11 @@
         <span class="title-script">GiGi's Strolling</span>
         <span class="title-caps">Adventure</span>
       </h1>
-      <img class="feature-image" src="cover-spread.png" alt="Strolling Adventure book cover illustration">
+      <img
+        class="feature-image"
+        src="cover-spread.png"
+        alt="Strolling Adventure book cover by Gloria Taylor Crone — children's nature book set in Yorktown, Virginia"
+      >
 
       <section class="buy-section" aria-labelledby="buy-heading">
         <h2 id="buy-heading" class="buy-heading">Buy the Book</h2>
@@ -62,8 +66,30 @@
         </div>
       </section>
 
+      <section class="about-section" aria-labelledby="about-heading">
+        <h2 id="about-heading" class="section-heading">
+          <a routerLink="/about">About the Book</a>
+        </h2>
+        <p class="section-text">
+          <em>Strolling Adventure</em> is a Christian children's book by Gloria Taylor Crone, inspired
+          by nature walks with her grandson in Yorktown, Virginia. Through song and rhyme, little
+          ones discover colors, numbers, and the wonder of God's creation — from the sun over the
+          York River to squirrels, songbirds, honeybees, and friends along the way.
+        </p>
+        <p class="section-text">
+          Set in historic Yorktown, the book celebrates everyday strolls through a caring community
+          where neighbors share warm smiles on the local paths.
+          <a routerLink="/about" class="inline-link">Read more about the book &rarr;</a>
+        </p>
+      </section>
+
       <section class="activities-section" aria-labelledby="activities-heading">
-        <h2 id="activities-heading" class="activities-heading">Activities</h2>
+        <h2 id="activities-heading" class="activities-heading">
+          <a routerLink="/activities">Activities</a>
+        </h2>
+        <p class="section-text">
+          Free printable puzzles extend the adventure — play online or print to enjoy anywhere.
+        </p>
         <div class="activities-grid">
           <a class="activity-card" routerLink="/maze">
             <svg class="activity-icon" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -102,6 +128,19 @@
           </a>
         </div>
       </section>
+
+      <section class="learn-section" aria-labelledby="learn-heading">
+        <h2 id="learn-heading" class="section-heading">
+          <a routerLink="/learn">Explore Nature</a>
+        </h2>
+        <p class="section-text">
+          Discover ten topics from the book — the sun over Yorktown Beach, Virginia's state bird the
+          Northern cardinal, honeybees, butterflies, and more.
+          <a routerLink="/learn" class="inline-link">Browse all nature topics &rarr;</a>
+        </p>
+      </section>
+
+      <app-site-footer />
     </div>
   </div>
 </main>
