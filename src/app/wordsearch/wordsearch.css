@@ -84,6 +84,16 @@ h1 {
   font-weight: 600;
 }
 
+.score .high-score {
+  color: var(--gray-700);
+  font-weight: 400;
+}
+
+.score .high-score strong {
+  font-weight: 600;
+  color: var(--activity-accent);
+}
+
 .score .progress {
   color: var(--gray-700);
   font-weight: 400;
@@ -190,6 +200,12 @@ table.grid td.found {
   font-weight: 600;
   color: var(--gray-900);
   letter-spacing: -0.01rem;
+}
+
+.win-high-score {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--activity-accent);
 }
 
 .win-points {

@@ -5,7 +5,10 @@
     <p class="sub">
       Get from <strong>START</strong> to <strong>END</strong> &mdash; the big rooms won't help you get there!
     </p>
-    <p class="score">Score: <strong>{{ score() }}</strong></p>
+    <p class="score">
+      Score: <strong>{{ score() }}</strong>
+      <span class="high-score">&middot; Best: <strong>{{ highScore() }}</strong></span>
+    </p>
   </header>
 
   <div class="canvas-wrap">
@@ -22,6 +25,9 @@
   @if (won()) {
     <div class="win-banner" role="status" aria-live="polite">
       <span class="win-title">You made it through! &#11088;</span>
+      @if (beatHighScore()) {
+        <span class="win-high-score">New high score!</span>
+      }
       <span class="win-points">+{{ lastAward() }} points &middot; Total score: {{ score() }}</span>
       <p class="win-ask">Want to try another one?</p>
       <div class="win-actions">

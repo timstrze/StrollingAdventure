@@ -7,6 +7,7 @@
     </p>
     <p class="score">
       Score: <strong>{{ score() }}</strong>
+      <span class="high-score">&middot; Best: <strong>{{ highScore() }}</strong></span>
       <span class="progress">&middot; {{ foundWords().size }} / {{ words().length }} found</span>
     </p>
   </header>
@@ -47,6 +48,9 @@
   @if (won()) {
     <div class="win-banner" role="status" aria-live="polite">
       <span class="win-title">You found them all! &#11088;</span>
+      @if (beatHighScore()) {
+        <span class="win-high-score">New high score!</span>
+      }
       <span class="win-points">Total score: {{ score() }}</span>
       <p class="win-ask">Want to try another one?</p>
       <div class="win-actions">

@@ -1,5 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { loadHighScore, saveHighScoreIfBetter } from '../game-scores';
 
 interface Cell {
   letter: string;
@@ -73,10 +74,13 @@ export class WordSearch {
   readonly selCells = signal<Set<number>>(new Set());
   readonly showing = signal(false);
   readonly score = signal(0);
+  readonly highScore = signal(loadHighScore('wordsearch'));
+  readonly beatHighScore = signal(false);
   readonly won = signal(false);
   readonly lastAward = signal(0);
   readonly lastWord = signal('');
 
+  private readonly sessionStartHigh = loadHighScore('wordsearch');
   private puzzleIndex = 0;
   private readonly shuffleSeed = Math.floor(Math.random() * 0xffffffff);
   private placed: Placed[] = [];
@@ -202,6 +206,7 @@ export class WordSearch {
     this.selCells.set(new Set());
     this.showing.set(false);
     this.won.set(false);
+    this.beatHighScore.set(false);
     this.lastAward.set(0);
     this.lastWord.set('');
   }
@@ -304,10 +309,15 @@ export class WordSearch {
     this.foundCells.set(nextFoundCells);
     this.foundWords.set(nextFoundWords);
     this.score.update((s) => s + pts);
+    const total = this.score();
+    if (saveHighScoreIfBetter('wordsearch', total)) this.highScore.set(total);
     this.lastAward.set(pts);
     this.lastWord.set(target);
 
-    if (nextFoundWords.size === this.words().length) this.won.set(true);
+    if (nextFoundWords.size === this.words().length) {
+      this.beatHighScore.set(total > this.sessionStartHigh);
+      this.won.set(true);
+    }
   }
 
   // ── Controls ─────────────────────────────────────────────────────────────────

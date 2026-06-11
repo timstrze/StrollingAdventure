@@ -6,6 +6,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { loadHighScore, saveHighScoreIfBetter } from '../game-scores';
 
 type Difficulty = 'easy' | 'medium' | 'hard';
 
@@ -46,10 +47,13 @@ export class Maze implements AfterViewInit {
   readonly difficulty = signal<Difficulty>('medium');
   readonly showing = signal(false);
   readonly score = signal(0);
+  readonly highScore = signal(loadHighScore('maze'));
+  readonly beatHighScore = signal(false);
   readonly won = signal(false);
   readonly lastAward = signal(0);
   readonly hint = signal<string | null>(null);
 
+  private readonly sessionStartHigh = loadHighScore('maze');
   private readonly POINTS: Record<Difficulty, number> = { easy: 10, medium: 20, hard: 30 };
 
   private ctx!: CanvasRenderingContext2D;
@@ -547,6 +551,9 @@ export class Maze implements AfterViewInit {
     const pts = this.POINTS[this.difficulty()];
     this.lastAward.set(pts);
     this.score.update((s) => s + pts);
+    const total = this.score();
+    if (saveHighScoreIfBetter('maze', total)) this.highScore.set(total);
+    this.beatHighScore.set(total > this.sessionStartHigh);
     this.hint.set(null);
     this.won.set(true);
   }
@@ -589,6 +596,7 @@ export class Maze implements AfterViewInit {
     this.headPos = null;
     this.active = false;
     this.won.set(false);
+    this.beatHighScore.set(false);
     this.lastAward.set(0);
     this.hint.set(null);
     this.roomImages = this.pickRoomImages();
