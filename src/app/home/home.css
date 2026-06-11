@@ -110,7 +110,7 @@ main {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--gray-400);
+  color: var(--gray-700);
   margin: 0 0 1rem;
   text-align: center;
 }
@@ -197,7 +197,7 @@ main {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--gray-400);
+  color: var(--gray-700);
   margin: 0 0 1rem;
   text-align: center;
 }

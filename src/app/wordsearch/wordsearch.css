@@ -227,7 +227,7 @@ table.grid td.found {
 
 .tip {
   font-size: 0.75rem;
-  color: var(--gray-400);
+  color: var(--gray-700);
   margin: 0.75rem 0 0;
   text-align: center;
 }
@@ -245,7 +245,7 @@ table.grid td.found {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--gray-400);
+  color: var(--gray-700);
   margin: 0 0 1rem;
   text-align: center;
 }
