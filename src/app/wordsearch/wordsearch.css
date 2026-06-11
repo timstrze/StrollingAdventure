@@ -13,7 +13,7 @@
   --activity-accent: oklch(51% 0.14 268);
 
   display: block;
-  background: #fff;
+  background: var(--page-bg);
   -webkit-text-size-adjust: 100%;
   font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",

@@ -1,5 +1,20 @@
 /* You can add global styles to this file, and also import other style files */
 
+:root {
+  --page-bg: #cce4c6;
+}
+
+html,
+body {
+  background-color: var(--page-bg);
+  min-height: 100%;
+}
+
+app-root {
+  display: block;
+  min-height: 100vh;
+}
+
 /* Footer URL shown only on the printed page (hidden on screen). */
 .print-footer {
   display: none;

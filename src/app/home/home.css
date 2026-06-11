@@ -32,6 +32,9 @@
   box-sizing: border-box;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  display: block;
+  background: var(--page-bg);
+  min-height: 100vh;
 }
 
 .page-title {
@@ -90,9 +93,10 @@ main {
 
 .feature-image {
   display: block;
-  width: 80%;
+  width: 56%;
   height: auto;
   margin: 2rem auto 0;
+  border: 2px solid var(--gray-400);
 }
 
 .buy-section {
