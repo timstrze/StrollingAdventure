@@ -10,6 +10,9 @@ export const DEFAULT_OG_IMAGE = `${SITE_URL}/cover-spread.png`;
 
 export const BOOK_ISBN = '9798868529849';
 
+export const YOUTUBE_PLAYLIST_URL =
+  'https://www.youtube.com/playlist?list=PLt19BAoeWJUhpNJcucOF38sQrbEyTuOMd';
+
 export const BOOK_OFFERS = [
   {
     name: 'Barnes & Noble',
