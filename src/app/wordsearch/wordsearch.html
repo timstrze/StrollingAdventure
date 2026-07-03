@@ -6,7 +6,7 @@
       Find words from the <strong>Strolling Adventure</strong> poem &mdash;
       <strong>drag</strong> across the letters to circle each one!
     </p>
-    <p class="score">
+    <p class="score no-print">
       Score: <strong>{{ score() }}</strong>
       <span class="high-score">&middot; Best: <strong>{{ highScore() }}</strong></span>
       <span class="progress">&middot; {{ foundWords().size }} / {{ words().length }} found</span>
@@ -47,7 +47,7 @@
   </div>
 
   @if (won()) {
-    <div class="win-banner" role="status" aria-live="polite">
+    <div class="win-banner no-print" role="status" aria-live="polite">
       <span class="win-title">You found them all! &#11088;</span>
       @if (beatHighScore()) {
         <span class="win-high-score">New high score!</span>

@@ -78,6 +78,7 @@ main {
   padding: 1rem;
   box-sizing: inherit;
   position: relative;
+  overflow-x: clip;
 }
 
 .content {
@@ -86,10 +87,17 @@ main {
   width: 100%;
   max-width: 700px;
   margin-bottom: 3rem;
+  position: relative;
 }
 
-.left-side {
-  text-align: center;
+.page-title,
+.buy-section,
+.about-section,
+.activities-section,
+.learn-section,
+app-site-footer {
+  position: relative;
+  z-index: 3;
 }
 
 .feature-image {
@@ -98,6 +106,12 @@ main {
   height: auto;
   margin: 2rem auto 0;
   border: 2px solid var(--gray-400);
+  position: relative;
+  z-index: 1;
+}
+
+.left-side {
+  text-align: center;
 }
 
 .about-section,
@@ -326,7 +340,7 @@ main {
 @media screen and (max-width: 650px) {
   .content {
     flex-direction: column;
-    width: max-content;
+    width: 100%;
     max-width: 100%;
   }
 }

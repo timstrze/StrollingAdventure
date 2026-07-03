@@ -7,12 +7,14 @@ import {
   YOUTUBE_PLAYLIST_URL,
 } from '../seo/seo.constants';
 import { SeoService } from '../seo/seo.service';
+import { CloudParallaxBack } from '../shared/cloud-parallax/cloud-parallax-back';
+import { CloudParallaxFront } from '../shared/cloud-parallax/cloud-parallax-front';
 import { SiteFooter } from '../shared/site-footer/site-footer';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink, SiteFooter],
+  imports: [RouterLink, CloudParallaxBack, CloudParallaxFront, SiteFooter],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })

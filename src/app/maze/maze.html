@@ -6,7 +6,7 @@
       A free printable maze from <strong>Strolling Adventure</strong> &mdash; get GiGi from
       <strong>START</strong> to <strong>END</strong>. The big rooms won't help you get there!
     </p>
-    <p class="score">
+    <p class="score no-print">
       Score: <strong>{{ score() }}</strong>
       <span class="high-score">&middot; Best: <strong>{{ highScore() }}</strong></span>
     </p>
@@ -24,7 +24,7 @@
   </div>
 
   @if (won()) {
-    <div class="win-banner" role="status" aria-live="polite">
+    <div class="win-banner no-print" role="status" aria-live="polite">
       <span class="win-title">You made it through! &#11088;</span>
       @if (beatHighScore()) {
         <span class="win-high-score">New high score!</span>

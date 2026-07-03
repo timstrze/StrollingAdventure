@@ -1,0 +1,167 @@
+:host {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+  overflow-x: clip;
+}
+
+:host(.layer-back) {
+  z-index: 0;
+}
+
+:host(.layer-front) {
+  z-index: 2;
+}
+
+.cloud-band {
+  position: relative;
+  width: 100%;
+  height: clamp(380px, 55vh, 600px);
+  overflow-x: clip;
+}
+
+.cloud-layer {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+  animation: cloud-parallax linear both;
+  animation-timeline: scroll(root block);
+}
+
+.layer-sm {
+  z-index: 1;
+  animation-name: cloud-parallax-sm;
+}
+
+.layer-md {
+  z-index: 2;
+  animation-name: cloud-parallax-md;
+}
+
+.layer-lrg {
+  z-index: 3;
+  animation-name: cloud-parallax-lrg;
+}
+
+@keyframes cloud-parallax-sm {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(0, 140px, 0);
+  }
+}
+
+@keyframes cloud-parallax-md {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(0, 260px, 0);
+  }
+}
+
+@keyframes cloud-parallax-lrg {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(0, 420px, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cloud-layer {
+    animation: none;
+  }
+}
+
+.cloud {
+  position: absolute;
+  height: auto;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.kite {
+  position: absolute;
+  height: auto;
+  width: clamp(400px, 72vw, 760px);
+  top: calc(18%);
+  left: -80px;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Small clouds — furthest back */
+.cloud-sm-1 {
+  width: clamp(80px, 14vw, 140px);
+  top: 12%;
+  left: 4%;
+}
+
+.cloud-sm-2 {
+  width: clamp(70px, 12vw, 120px);
+  top: 38%;
+  left: 38%;
+}
+
+.cloud-sm-3 {
+  width: clamp(90px, 15vw, 150px);
+  top: 8%;
+  right: 6%;
+  left: auto;
+}
+
+/* Medium clouds — middle depth */
+.cloud-md-1 {
+  width: clamp(120px, 20vw, 200px);
+  top: 28%;
+  left: 18%;
+}
+
+.cloud-md-2 {
+  width: clamp(110px, 18vw, 180px);
+  top: 48%;
+  right: 22%;
+  left: auto;
+}
+
+.cloud-md-3 {
+  width: clamp(100px, 17vw, 170px);
+  top: 6%;
+  right: 38%;
+  left: auto;
+}
+
+/* Large clouds — closest front */
+.cloud-lrg-1 {
+  width: clamp(160px, 28vw, 280px);
+  top: 42%;
+  left: 0;
+}
+
+.cloud-lrg-2 {
+  width: clamp(150px, 26vw, 260px);
+  top: 18%;
+  right: calc(52%);
+}
+
+.cloud-lrg-3 {
+  width: clamp(140px, 24vw, 240px);
+  top: 35%;
+  right: 0;
+  left: auto;
+}
+
+@media screen and (max-width: 650px) {
+  .cloud-band {
+    height: clamp(300px, 48vh, 460px);
+  }
+}

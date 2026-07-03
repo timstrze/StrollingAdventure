@@ -386,12 +386,29 @@ button.control-card:hover .control-arrow {
 }
 
 @media print {
-  .no-print {
-    display: none !important;
+  .maze-page {
+    padding: 0;
+    max-width: none;
+    page-break-inside: avoid;
+    break-inside: avoid;
   }
 
-  .maze-page {
-    padding: 0.5rem;
-    max-width: none;
+  h1 {
+    font-size: 1.25rem;
+    margin: 0 0 0.25rem;
+  }
+
+  .sub {
+    font-size: 0.75rem;
+    margin: 0 0 0.5rem;
+  }
+
+  canvas {
+    max-height: 7.5in;
+    max-width: 100%;
+    width: auto !important;
+    height: auto !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
   }
 }
