@@ -20,7 +20,7 @@ Captured from `npm start` at `http://localhost:4200/` on June 10, 2026:
 |------|--------|-------|
 | Asset | `public/sun-color-2020-09-26.jpg` (~1.1 MB) | `public/cover-spread.png` (~283 KB) |
 | Template | `src/app/home/home.html` | `src` updated to `cover-spread.png` |
-| Alt text | "A beautiful sunset" | "Strolling Adventure book cover illustration" |
+| Alt text | "A beautiful sunset" | "Strolling Adventure book cover by Gloria Taylor Crone — children's nature book set in Yorktown, Virginia" |
 | Styling | `.feature-image` in `home.css` (unchanged) | Full-width, responsive |
 
 ## Files touched
