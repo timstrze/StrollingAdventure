@@ -44,7 +44,7 @@ Confirm the home page displays the Strolling Adventure book cover illustration i
 | Step | Action | Expected result |
 |------|--------|-----------------|
 | 1 | Inspect the feature `<img>` element | `src` resolves to `cover-spread.png` |
-| 2 | Check `alt` attribute | Value is `Strolling Adventure book cover illustration` |
+| 2 | Check `alt` attribute | Value mentions the Strolling Adventure book cover and Yorktown, Virginia (see `home.html` for exact text) |
 | 3 | Check CSS class | Element has class `feature-image` |
 
 **Pass criteria:** Correct `src`, `alt`, and class on the home page image.

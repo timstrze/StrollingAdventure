@@ -1,6 +1,6 @@
 # GiGi's Strolling Adventure — Architecture
 
-This document describes the system architecture, conventions, and operational context for **GiGi's Strolling Adventure** (internal project name: `myapp`). It is intended for human developers and AI assistants working on the codebase.
+This document describes the system architecture, conventions, and operational context for **GiGi's Strolling Adventure** (internal CLI project name: `myapp`). It is intended for human developers and AI assistants working on the codebase.
 
 For product intent and implemented features, see [`blueprint.md`](./blueprint.md). For Angular coding standards enforced by AI tooling, see [`GEMINI.md`](./GEMINI.md).
 
@@ -13,33 +13,33 @@ For product intent and implemented features, see [`blueprint.md`](./blueprint.md
 3. [High-Level Architecture](#3-high-level-architecture)
 4. [Project Structure](#4-project-structure)
 5. [Application Bootstrap](#5-application-bootstrap)
-6. [Component Layer](#6-component-layer)
-7. [Routing](#7-routing)
-8. [State Management](#8-state-management)
-9. [Styling & Design System](#9-styling--design-system)
-10. [Static Assets](#10-static-assets)
-11. [Configuration & Build](#11-configuration--build)
-12. [Development Environment](#12-development-environment)
-13. [Testing Strategy](#13-testing-strategy)
-14. [Coding Conventions](#14-coding-conventions)
-15. [Extending the Application](#15-extending-the-application)
-16. [Known Gaps & Technical Debt](#16-known-gaps--technical-debt)
-17. [Related Documentation](#17-related-documentation)
+6. [Routing](#6-routing)
+7. [Components & Features](#7-components--features)
+8. [Services & Shared Utilities](#8-services--shared-utilities)
+9. [State Management](#9-state-management)
+10. [Styling & Design System](#10-styling--design-system)
+11. [Static Assets & SEO](#11-static-assets--seo)
+12. [SSR, Prerendering & Deployment](#12-ssr-prerendering--deployment)
+13. [Configuration & Build](#13-configuration--build)
+14. [Development Environment](#14-development-environment)
+15. [Testing Strategy](#15-testing-strategy)
+16. [Coding Conventions](#16-coding-conventions)
+17. [Extending the Application](#17-extending-the-application)
+18. [Known Gaps & Technical Debt](#18-known-gaps--technical-debt)
+19. [Related Documentation](#19-related-documentation)
 
 ---
 
 ## 1. System Overview
 
-**GiGi's Strolling Adventure** is a client-only, single-page web application built with Angular. There is no backend server, database, or API layer in this repository.
+**GiGi's Strolling Adventure** is a client-side Angular application that is **prerendered to static HTML** at build time and deployed as static files to Firebase Hosting. There is no custom backend API in this repository; the Express server in `src/server.ts` is used only for SSR/prerender tooling and optional local SSR serving.
 
 | Attribute | Value |
 |-----------|-------|
-| **Type** | Single-page application (SPA) |
-| **Deployment model** | Static files (HTML/JS/CSS) served from a web host |
-| **Current scope (v1)** | Home view with title and feature image |
+| **Type** | Multi-page SPA with prerendered routes |
+| **Deployment model** | Static files (HTML/JS/CSS) on Firebase Hosting |
+| **Live URL** | `https://www.strollingadventure.com` |
 | **Architecture style** | Standalone components, signal-based state, zone.js change detection |
-
-The application is intentionally small today. The architecture is set up to grow via lazy-loaded feature routes, standalone feature components, and root-scoped services without introducing NgModules.
 
 ---
 
@@ -52,79 +52,89 @@ The application is intentionally small today. The architecture is set up to grow
 | Reactive primitives | RxJS | 7.8.x |
 | Change detection | Zone.js | 0.15.x |
 | Build tool | `@angular/build` (esbuild-based) | 20.3.x |
+| SSR / prerender | `@angular/ssr` + Express | 20.3.x |
 | Unit tests | Jasmine + Karma | — |
+| Hosting | Firebase Hosting | — |
 | Package manager | npm | — |
 | Dev environment | Google IDX (Nix) | Node 20 |
 
-**Not currently used:** NgModules, NgRx/state libraries, CSS frameworks (Tailwind, Bootstrap), HTTP client, Firebase SDK (MCP tooling is configured but no Firebase app code exists yet).
+**Not currently used:** NgModules, NgRx/state libraries, CSS frameworks, HTTP client for app data, Firebase SDK in application code.
 
 ---
 
 ## 3. High-Level Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                        Browser                              │
-│  ┌───────────────────────────────────────────────────────┐  │
-│  │  index.html  →  <app-root>                            │  │
-│  └───────────────────────────┬───────────────────────────┘  │
-│                              │                              │
-│  ┌───────────────────────────▼───────────────────────────┐  │
-│  │  main.ts                                                │  │
-│  │    bootstrapApplication(App, appConfig)                 │  │
-│  └───────────────────────────┬───────────────────────────┘  │
-│                              │                              │
-│  ┌───────────────────────────▼───────────────────────────┐  │
-│  │  app.config.ts  (ApplicationConfig providers)         │  │
-│  │    • provideRouter(routes)                            │  │
-│  │    • provideZoneChangeDetection({ eventCoalescing })  │  │
-│  │    • provideBrowserGlobalErrorListeners()             │  │
-│  └───────────────────────────┬───────────────────────────┘  │
-│                              │                              │
-│  ┌───────────────────────────▼───────────────────────────┐  │
-│  │  App (root component)                                   │  │
-│  │    • Inline template (app.html)                         │  │
-│  │    • Component-scoped styles                            │  │
-│  │    • signal('GiGi\'s Strolling Adventure')             │  │
-│  │    • <router-outlet /> (ready for future routes)      │  │
-│  └───────────────────────────────────────────────────────┘  │
-│                                                             │
-│  Static assets served from /public → build root             │
-└─────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────┐
+│                         Build (ng build)                         │
+│  Angular SSR prerender → static HTML for all routes              │
+│  Output: dist/myapp/browser/                                     │
+└───────────────────────────────┬──────────────────────────────────┘
+                                │
+                                ▼
+┌──────────────────────────────────────────────────────────────────┐
+│                    Firebase Hosting (production)                 │
+│  firebase.json rewrites ** → /index.html for client navigation   │
+│  Static assets: cover-spread.png, sitemap.xml, robots.txt        │
+└───────────────────────────────┬──────────────────────────────────┘
+                                │
+                                ▼
+┌──────────────────────────────────────────────────────────────────┐
+│                          Browser                               │
+│  index.html → bootstrapApplication(App, appConfig)               │
+│  App (shell) → <router-outlet />                               │
+│    ├── Home (+ cloud parallax, footer)                         │
+│    ├── About / Author / Illustrators                           │
+│    ├── Activities / Maze / WordSearch                          │
+│    └── Learn hub / Learn topic pages                           │
+└──────────────────────────────────────────────────────────────────┘
 ```
 
-**Data flow today:** Unidirectional and local. The root `App` component holds a `title` signal; the template reads it via `{{ title() }}`. No services, HTTP calls, or shared stores exist yet.
+**Data flow:** Page content is mostly static. Interactive games (maze, word search) use component-local signals and canvas/DOM logic. High scores persist in `localStorage`. SEO metadata is set per route via `SeoService` in each page component's `ngOnInit`.
 
 ---
 
 ## 4. Project Structure
 
 ```
-StrollingAdventure/
-├── .idx/                    # Google IDX workspace config
-│   ├── dev.nix              # Nix packages, preview server, extensions
-│   └── mcp.json             # MCP servers (Angular CLI, Firebase)
-├── .vscode/                 # Editor tasks, launch configs (committed)
-├── public/                  # Static assets copied verbatim to build output
-│   ├── favicon.ico
-│   ├── cover-spread.png
-│   └── maze/                # Maze activity illustration assets
+/
+├── .idx/                       # Google IDX workspace config
+│   ├── dev.nix
+│   └── mcp.json
+├── .vscode/                    # Editor tasks, launch configs
+├── docs/                       # Feature notes, QA, agent instructions
+├── public/                     # Static assets copied to build output root
+│   ├── robots.txt
+│   └── sitemap.xml
 ├── src/
-│   ├── index.html           # Shell document; mounts <app-root>
-│   ├── main.ts              # Application entry point
-│   ├── styles.css           # Global styles (currently empty)
+│   ├── index.html
+│   ├── main.ts                 # Browser bootstrap
+│   ├── main.server.ts          # Server bootstrap
+│   ├── server.ts               # Express SSR handler (build/dev tooling)
+│   ├── styles.css              # Global styles and print rules
 │   └── app/
-│       ├── app.ts           # Root component class
-│       ├── app.html           # Root template + scoped CSS
-│       ├── app.config.ts    # DI providers / app-wide configuration
-│       ├── app.routes.ts    # Route definitions (empty)
-│       └── app.spec.ts      # Root component unit tests
-├── angular.json             # CLI project & build configuration
-├── package.json
-├── tsconfig.json            # Strict TypeScript + Angular compiler options
-├── blueprint.md             # Product/feature specification
-├── GEMINI.md                # AI developer persona & Angular conventions
-└── architecture.md          # This file
+│       ├── app.ts              # Root shell (router-outlet only)
+│       ├── app.html
+│       ├── app.config.ts       # Browser providers
+│       ├── app.config.server.ts
+│       ├── app.routes.ts       # Client routes + PRERENDER_ROUTES
+│       ├── app.routes.server.ts # Prerender configuration
+│       ├── app.spec.ts
+│       ├── seo/                # SeoService + constants
+│       ├── shared/             # Footer, cloud parallax, content-page CSS
+│       ├── home/
+│       ├── about/
+│       ├── activities/
+│       ├── maze/
+│       ├── learn/
+│       ├── wordsearch/
+│       └── game-scores.ts      # localStorage high-score helpers
+├── angular.json
+├── firebase.json
+├── prerender-routes.txt        # Route list mirror for tooling/reference
+├── blueprint.md
+├── GEMINI.md
+└── architecture.md             # This file
 ```
 
 ### Naming conventions
@@ -132,9 +142,9 @@ StrollingAdventure/
 | Item | Convention | Example |
 |------|------------|---------|
 | Angular project name (CLI) | `myapp` | `ng build` targets `myapp` |
-| Component selector prefix | `app` | `app-root` |
-| Component files | `feature.ts`, `feature.html` | `app.ts`, `app.html` |
-| Routes file | `app.routes.ts` | Single file at app root today |
+| Component selector prefix | `app` | `app-home`, `app-maze` |
+| Component files | `feature.ts`, `feature.html`, `feature.css` | `home.ts`, `home.html` |
+| Routes | `app.routes.ts` | Eager-loaded page components |
 
 ---
 
@@ -146,250 +156,227 @@ Bootstrapping follows the modern **standalone** pattern (no `AppModule`).
 index.html
     └── main.ts
             └── bootstrapApplication(App, appConfig)
-                    ├── App          (root component)
+                    ├── App          (root shell)
                     └── appConfig    (providers)
 ```
 
-### Entry point — `src/main.ts`
+### Root component — `src/app/app.ts`
 
-```typescript
-bootstrapApplication(App, appConfig)
-  .catch((err) => console.error(err));
-```
+The root `App` component is a thin shell: it renders only `<router-outlet />`. All page content lives in routed feature components.
 
 ### Application config — `src/app/app.config.ts`
 
-Providers registered at startup:
-
 | Provider | Purpose |
 |----------|---------|
-| `provideRouter(routes)` | Client-side routing (routes array is empty) |
+| `provideRouter(routes)` | Client-side routing for all pages |
 | `provideZoneChangeDetection({ eventCoalescing: true })` | Zone.js with batched DOM events |
 | `provideBrowserGlobalErrorListeners()` | Global unhandled error/rejection logging |
-
-When adding cross-cutting concerns (HTTP, image loader, animations), register new `provide*` functions here.
-
----
-
-## 6. Component Layer
-
-### Current components
-
-There is **one** component: the root `App` component.
-
-| File | Role |
-|------|------|
-| `app.ts` | Component class; declares `title` signal |
-| `app.html` | Template, inline `<style>` block, and `<router-outlet>` |
-
-### Component definition pattern
-
-```typescript
-@Component({
-  selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.html',
-  styleUrl: './app.css'   // referenced but file does not exist — see §16
-})
-export class App {
-  protected readonly title = signal('GiGi\'s Strolling Adventure');
-}
-```
-
-### Intended patterns for new components
-
-All new components **must** follow the conventions in [`GEMINI.md`](./GEMINI.md):
-
-- **Standalone by default** — do not add `standalone: true` explicitly; it is implicit in Angular 20+
-- **`ChangeDetectionStrategy.OnPush`** — required on every component
-- **Signals** — `signal()`, `computed()`, `input()`, `output()` instead of decorators
-- **Native control flow** — `@if`, `@for`, `@switch` in templates (never `*ngIf` / `*ngFor`)
-- **Dependency injection** — `inject()` function, not constructor parameters
-- **No NgModules** — the app is 100% standalone
-
-### Recommended feature layout (future)
-
-When the app grows beyond a single view, organize by feature:
-
-```
-src/app/
-├── app.ts
-├── app.config.ts
-├── app.routes.ts
-├── core/              # Singleton services, guards, interceptors
-├── shared/            # Reusable presentational components & pipes
-└── features/
-    └── home/
-        ├── home.ts
-        └── home.html
-```
-
-Use **lazy loading** for feature routes:
-
-```typescript
-{
-  path: 'gallery',
-  loadComponent: () => import('./features/gallery/gallery').then(m => m.Gallery)
-}
-```
+| `provideClientHydration(withEventReplay())` | Client hydration after prerender |
 
 ---
 
-## 7. Routing
+## 6. Routing
 
-Routing is configured but **unused**. `app.routes.ts` exports an empty array:
+Routes are defined in `src/app/app.routes.ts`:
 
-```typescript
-export const routes: Routes = [];
-```
+| Path | Component | Description |
+|------|-----------|-------------|
+| `''` | `Home` | Landing page |
+| `about` | `About` | Book overview |
+| `about/author` | `Author` | Author page |
+| `about/illustrators` | `Illustrators` | Illustrator credits |
+| `activities` | `ActivitiesPage` | Activities hub |
+| `maze` | `Maze` | Maze game |
+| `wordsearch` | `WordSearch` | Word search game |
+| `learn` | `LearnHub` | Nature topics index |
+| `learn/:slug` | `LearnTopic` | Individual topic |
+| `**` | redirect → `''` | Fallback |
 
-The root template includes `<router-outlet />` at the bottom of `app.html`, so future routed views will render below the current home content unless the template is refactored.
+All page components are **eagerly imported** (not lazy-loaded). The app is small enough that lazy loading is optional.
 
-### Adding a route
-
-1. Define the route in `app.routes.ts`
-2. Create a standalone feature component
-3. Decide whether the home content stays in `App` or moves to a dedicated `Home` component
-4. Prefer `loadComponent` lazy loading for non-default routes
-
----
-
-## 8. State Management
-
-| Scope | Mechanism | Current usage |
-|-------|-----------|---------------|
-| Component-local | `signal()`, `computed()` | `App.title` |
-| Shared / app-wide | `@Injectable({ providedIn: 'root' })` services | None yet |
-| Async streams | RxJS + `async` pipe in templates | None yet |
-| Global store (NgRx, etc.) | — | Not adopted |
-
-**Guidance:** Start with signals in components. Extract to a root service when two or more components need the same state. Avoid introducing a global store until cross-feature state complexity justifies it.
+`PRERENDER_ROUTES` in the same file lists every path prerendered at build time, including all learn topic slugs from `LEARN_SLUGS`.
 
 ---
 
-## 9. Styling & Design System
+## 7. Components & Features
+
+### Page components
+
+| Component | Key dependencies | Notes |
+|-----------|------------------|-------|
+| `Home` | Cloud parallax, SiteFooter, SeoService | Buy links, activity cards, learn preview |
+| `About`, `Author`, `Illustrators` | SiteFooter, SeoService, content-page CSS | About section pages |
+| `ActivitiesPage` | SiteFooter, SeoService | Links to games |
+| `Maze` | Canvas, game-scores, SeoService | Difficulty levels, scoring, print |
+| `WordSearch` | game-scores, SeoService | Grid generation, selection, print |
+| `LearnHub`, `LearnTopic` | topics.ts data, SeoService | 10 static nature topics |
+
+### Shared components
+
+| Component | Purpose |
+|-----------|---------|
+| `SiteFooter` | Footer nav (About, Author, Activities, Learn, Music, Buy) |
+| `CloudParallaxBack` | Background cloud layer (homepage) |
+| `CloudParallaxFront` | Foreground cloud layer with kite (homepage) |
+
+### Learn content
+
+Topic data is a static TypeScript array in `src/app/learn/topics.ts`. Each topic includes slug, title, description, paragraphs, an in-book quote, optional external source, and a CTA link.
+
+---
+
+## 8. Services & Shared Utilities
+
+### SeoService (`src/app/seo/seo.service.ts`)
+
+Root-scoped service that updates per-page:
+
+- Document title
+- Meta description, Open Graph, and Twitter tags
+- Canonical URL (based on `SITE_URL` in `seo.constants.ts`)
+- JSON-LD script injection (`setJsonLd` / `clearJsonLd`)
+
+Constants in `seo.constants.ts` include site URL, default title/description, OG image, book ISBN, retailer offers, YouTube playlist URL, and Book schema for JSON-LD.
+
+### game-scores.ts
+
+Plain functions (not a service) for maze and word search high scores:
+
+- `loadHighScore(game)` — reads from `localStorage`
+- `saveHighScoreIfBetter(game, score)` — persists when score beats the record
+
+Storage key: `strolling-adventure-high-scores`.
+
+---
+
+## 9. State Management
+
+| Scope | Mechanism | Usage |
+|-------|-----------|-------|
+| Component-local | `signal()`, `computed()` | Game state, difficulty, scores, grid data |
+| Shared / app-wide | `@Injectable({ providedIn: 'root' })` | `SeoService` |
+| Persistence | `localStorage` via `game-scores.ts` | Maze and word search high scores |
+| Static content | TypeScript constants | Learn topics, SEO constants, word database |
+
+No global store (NgRx) is used.
+
+---
+
+## 10. Styling & Design System
 
 ### Global vs component styles
 
-| Location | Scope | Current content |
-|----------|-------|-----------------|
-| `src/styles.css` | Application-wide | Empty placeholder |
-| `app.html` `<style>` block | `:host` scoped to `App` | Full design system |
+| Location | Scope | Content |
+|----------|-------|---------|
+| `src/styles.css` | Application-wide | Page background, print media rules |
+| `src/app/home/home.css` | Home page | Typography, layout, buy/activity cards, OKLCH tokens |
+| `src/app/shared/content-page.css` | About, learn, activities | Shared content page layout |
+| Per-game CSS | Maze, word search | Game UI and print layouts |
+| `src/app/shared/cloud-parallax/cloud-parallax.css` | Parallax layers | Cloud and kite animation |
 
-Most styling lives **inline in `app.html`**, not in a separate stylesheet. CSS custom properties are defined on `:host`.
+### Design tokens
 
-### Design tokens (defined in `app.html`)
+Home page defines OKLCH accent colors on `:host` in `home.css`. Global background uses `--page-bg: #cce4c6` in `styles.css`.
 
-**Colors (OKLCH):**
+Home title fonts:
 
-| Token | Usage |
-|-------|-------|
-| `--bright-blue` | Primary accent |
-| `--electric-violet`, `--french-violet` | Purple accents |
-| `--vivid-pink`, `--hot-red`, `--orange-red` | Warm accents |
-| `--gray-900`, `--gray-700`, `--gray-400` | Text hierarchy |
-
-**Gradients:**
-
-- `--red-to-pink-to-purple-vertical-gradient`
-- `--red-to-pink-to-purple-horizontal-gradient`
-
-**Typography:**
-
+- Script: `"Lobster"` for "GiGi's Strolling"
+- Caps: `"Bebas Neue"` for "Adventure"
 - Body: `"Inter"` stack
-- Headings (`h1`): `"Inter Tight"` stack
 
-### Layout
+### Print styles
 
-- Centered flex layout in `<main>`
-- Max content width: `700px`
-- Responsive breakpoint at `650px` — stacks content vertically, horizontal divider becomes vertical gradient line
-
-### Styling rules for contributors
-
-- Use **native CSS** unless explicitly asked to add a framework
-- Prefer CSS custom properties for theme values
-- Use `[class]` and `[style]` bindings — not `NgClass` / `NgStyle`
-- Consider moving shared tokens to `src/styles.css` or a dedicated `styles/tokens.css` as the app grows
+Global `@media print` rules in `styles.css` hide `.no-print` elements and `app-site-footer`, and show `.print-footer` for the site URL on printed puzzle pages.
 
 ---
 
-## 10. Static Assets
+## 11. Static Assets & SEO
 
-Assets in `public/` are copied to the build output root by `angular.json`:
+Assets in `public/` are copied to the build output root:
 
 ```json
 "assets": [{ "glob": "**/*", "input": "public" }]
 ```
 
-| Asset | Referenced as | Notes |
-|-------|---------------|-------|
-| `public/favicon.ico` | `/favicon.ico` | Linked from `index.html` |
-| `public/cover-spread.png` | `cover-spread.png` | Book cover illustration on home view |
+| Asset | Path | Notes |
+|-------|------|-------|
+| `robots.txt` | `/robots.txt` | Crawler directives |
+| `sitemap.xml` | `/sitemap.xml` | All public routes |
+| `cover-spread.png` | `/cover-spread.png` | Book cover (referenced in templates; may be gitignored or supplied at deploy) |
 
-Reference public assets with **root-relative paths** (no `public/` prefix in templates).
-
-### Image optimization (future)
-
-[`GEMINI.md`](./GEMINI.md) recommends `NgOptimizedImage` with a loader provider in `app.config.ts` for static images. This is not implemented yet.
+Reference public assets with **root-relative paths** (no `public/` prefix).
 
 ---
 
-## 11. Configuration & Build
+## 12. SSR, Prerendering & Deployment
+
+### Prerender configuration
+
+`angular.json` sets `"outputMode": "static"` with SSR entry at `src/server.ts`.
+
+`app.routes.server.ts` configures prerender:
+
+- `learn/:slug` — prerender params from `LEARN_SLUGS`
+- `**` — all other routes prerendered
+
+`prerender-routes.txt` mirrors the full route list for reference.
+
+### Firebase Hosting
+
+`firebase.json`:
+
+- **public:** `dist/myapp/browser`
+- **rewrites:** all paths → `/index.html` (SPA fallback for client navigation)
+
+Deploy:
+
+```bash
+npm run deploy    # ng build && firebase deploy --only hosting
+```
+
+Firebase project: `strolling-adventure-8269-a69e5` (`.firebaserc`).
+
+---
+
+## 13. Configuration & Build
 
 ### TypeScript
 
-- **Strict mode** enabled (`strict: true`)
-- Angular template strictness: `strictTemplates`, `strictInjectionParameters`, `strictInputAccessModifiers`
-- Target: ES2022; module: `preserve`
-
-### Build configurations (`angular.json`)
-
-| Configuration | Use case | Key settings |
-|---------------|----------|--------------|
-| `production` (default for `ng build`) | Release | Output hashing, bundle budgets |
-| `development` | Local dev / `ng serve` | Source maps, no optimization |
-
-**Production budgets:**
-
-- Initial bundle: warn at 500 kB, error at 1 MB
-- Per-component styles: warn at 4 kB, error at 8 kB
+- Strict mode enabled
+- Angular template strictness enabled
+- Target: ES2022
 
 ### npm scripts
 
 | Script | Command | Purpose |
 |--------|---------|---------|
-| `start` | `ng serve` | Dev server (port 4200 locally) |
-| `build` | `ng build` | Production build → `dist/` |
-| `watch` | `ng build --watch --configuration development` | Incremental dev builds |
+| `start` | `ng serve` | Dev server (port 4200) |
+| `build` | `ng build` | Production prerender build |
+| `watch` | `ng build --watch --configuration development` | Incremental builds |
 | `test` | `ng test` | Karma unit tests |
+| `deploy` | `ng build && firebase deploy --only hosting` | Production deploy |
+| `serve:ssr:myapp` | `node dist/myapp/server/server.mjs` | Local SSR server (post-build) |
 
 ### Output
 
-Production builds emit to `dist/myapp/browser/` (Angular application builder default).
+Production build emits prerendered static files to `dist/myapp/browser/`.
 
 ---
 
-## 12. Development Environment
+## 14. Development Environment
 
 ### Local development
 
 ```bash
 npm install
-npm start          # http://localhost:4200
-npm run build      # verify compilation
-npm test           # unit tests
+npm start
+npm run build
+npm test
 ```
 
 ### Google IDX / Firebase Studio
 
-The `.idx/dev.nix` file configures:
-
-- **Node.js 20** via Nix
-- **Extensions:** Angular Language Service, Gemini CLI companion
-- **Preview server:** `npm run start -- --port $PORT --host 0.0.0.0`
-
-In IDX, the dev server is managed by the workspace preview — AI assistants should **not** start `ng serve` manually when working in that environment (see [`GEMINI.md`](./GEMINI.md)).
+`.idx/dev.nix` configures Node 20, Angular Language Service, and a preview server on `$PORT`. In IDX, the dev server is managed by the workspace preview — do not start `ng serve` manually in that environment (see [`GEMINI.md`](./GEMINI.md)).
 
 ### MCP servers (`.idx/mcp.json`)
 
@@ -398,125 +385,59 @@ In IDX, the dev server is managed by the workspace preview — AI assistants sho
 | `angular-cli` | Angular CLI MCP integration |
 | `firebase` | Firebase tools experimental MCP |
 
-These support AI-assisted development; no Firebase application code is wired up in the repo yet.
-
-### VS Code
-
-Committed configs under `.vscode/`:
-
-- `tasks.json` — background `npm start` and `npm test` tasks
-- `launch.json` — Chrome debug against localhost:4200
-- `extensions.json` — recommended Angular extension
-
 ---
 
-## 13. Testing Strategy
+## 15. Testing Strategy
 
 ### Unit tests
 
-- **Framework:** Jasmine assertions + Karma runner
-- **Location:** `*.spec.ts` alongside source files
-- **Root test:** `src/app/app.spec.ts`
+- **Framework:** Jasmine + Karma
+- **Location:** `*.spec.ts` alongside source
+- **Root test:** `src/app/app.spec.ts` — verifies app creation and router-outlet rendering
 
-Run with:
-
-```bash
-npm test
-```
-
-### Current test status
-
-`app.spec.ts` contains a **stale assertion**: it expects `'Hello, myapp'` in the `h1`, but the component renders `'GiGi's Strolling Adventure'`. This test will fail until updated.
-
-### Testing conventions for new code
-
-- Test standalone components by importing them directly into `TestBed.configureTestingModule({ imports: [Component] })`
-- Call `fixture.detectChanges()` before querying the DOM
-- Prefer testing behavior and rendered output over implementation details
+Run with `npm test`.
 
 ### E2E
 
-No end-to-end framework is configured. `ng e2e` is documented in README but requires adding a framework (Playwright, Cypress, etc.).
+No end-to-end framework is configured.
 
 ---
 
-## 14. Coding Conventions
+## 16. Coding Conventions
 
-This project follows modern Angular 20+ patterns. The authoritative AI-facing rules live in [`GEMINI.md`](./GEMINI.md). Summary for quick reference:
-
-### Required
+Authoritative AI-facing rules live in [`GEMINI.md`](./GEMINI.md). Summary:
 
 | Area | Rule |
 |------|------|
-| Components | Standalone, `OnPush`, signals for state |
-| Inputs/outputs | `input()` / `output()` functions |
-| Templates | `@if`, `@for` (with `track`), `@switch` |
-| DI | `inject()` in services and components |
+| Components | Standalone, signals for state |
+| Templates | `@if`, `@for`, `@switch` native control flow |
+| DI | `inject()` function |
 | Services | `providedIn: 'root'` for singletons |
-| TypeScript | Strict typing; avoid `any` |
-| CSS | Native CSS; `[class]` / `[style]` bindings |
+| CSS | Native CSS; component-scoped stylesheets |
 
-### Forbidden
-
-| Pattern | Replacement |
-|---------|-------------|
-| `@NgModule` | Standalone components |
-| `*ngIf`, `*ngFor`, `*ngSwitch` | `@if`, `@for`, `@switch` |
-| `@Input()`, `@Output()` | `input()`, `output()` |
-| `NgClass`, `NgStyle` | `[class]`, `[style]` |
-| Constructor injection | `inject()` |
-
-### Prettier
-
-Configured in `package.json`: 100 char print width, single quotes, Angular HTML parser for `*.html`.
-
-### Post-change verification
-
-After substantive changes, run:
-
-```bash
-ng build
-```
-
-Fix any compiler errors before considering the work complete.
+**Note:** Most components do not yet declare `ChangeDetectionStrategy.OnPush` explicitly, though `GEMINI.md` recommends it for new components.
 
 ---
 
-## 15. Extending the Application
+## 17. Extending the Application
 
 ### Adding a new page
 
-1. Generate a standalone component: `ng generate component features/my-feature`
-2. Add `ChangeDetectionStrategy.OnPush` and apply GEMINI conventions
-3. Register a lazy route in `app.routes.ts`
-4. Refactor `App` if the home content should not appear on every page
-5. Update [`blueprint.md`](./blueprint.md) with the new feature
-6. Run `ng build` and fix tests
+1. Create a standalone component under `src/app/`
+2. Register the route in `app.routes.ts`
+3. Add the path to `PRERENDER_ROUTES` and `prerender-routes.txt`
+4. Call `SeoService.update()` in `ngOnInit`
+5. Add the URL to `public/sitemap.xml`
+6. Update [`blueprint.md`](./blueprint.md)
+7. Run `ng build` and fix any errors
 
-### Adding a service
+### Adding a learn topic
 
-1. `ng generate service core/my-service`
-2. Use `@Injectable({ providedIn: 'root' })`
-3. Inject dependencies with `inject()`
-4. Expose state as signals where appropriate
-
-### Adding HTTP / backend integration
-
-1. Add `provideHttpClient()` to `app.config.ts`
-2. Create a service in `core/` for API calls
-3. Use the `async` pipe or `toSignal()` for template consumption
-4. Document the API contract in this file or a dedicated `docs/` note
-
-### Adding Firebase
-
-1. Install Firebase SDK packages
-2. Configure environment files (not present today)
-3. Add initialization in `app.config.ts` or an `APP_INITIALIZER`
-4. Firebase MCP is already configured in `.idx/mcp.json` for tooling support
+1. Add an entry to `LEARN_TOPICS` in `src/app/learn/topics.ts`
+2. The slug is automatically included in prerender via `LEARN_SLUGS`
+3. Add the URL to `public/sitemap.xml`
 
 ### AI assistant workflow
-
-When making changes in an AI-assisted session:
 
 1. Read [`blueprint.md`](./blueprint.md) for current product state
 2. Read this file for structural context
@@ -526,31 +447,30 @@ When making changes in an AI-assisted session:
 
 ---
 
-## 16. Known Gaps & Technical Debt
+## 18. Known Gaps & Technical Debt
 
 | Item | Severity | Details |
 |------|----------|---------|
-| Missing `app.css` | Low | `app.ts` references `styleUrl: './app.css'` but the file does not exist. Styles are inline in `app.html`. Either create an empty `app.css` or remove the `styleUrl` reference. |
-| Stale unit test | Medium | `app.spec.ts` expects `'Hello, myapp'`; actual title is `'GiGi's Strolling Adventure'`. |
-| Empty routes | Info | Router is wired but unused; home content is hardcoded in root component. |
-| Placeholder comments in template | Low | `app.html` still contains Angular CLI scaffold comments. |
+| Missing `app.css` | Low | `app.ts` references `styleUrl: './app.css'` but the file does not exist. Create an empty file or remove the reference. |
+| No lazy loading | Info | All routes are eagerly imported; acceptable at current size. |
+| OnPush not universal | Info | `GEMINI.md` requires OnPush; most components use default change detection. |
 | Package name mismatch | Info | `package.json` name is `myapp`; product title is GiGi's Strolling Adventure. |
-| No E2E tests | Info | Framework not chosen or configured. |
-| Global styles unused | Info | `src/styles.css` is empty; all styling is component-scoped in `app.html`. |
-| README is generic | Low | README still reflects default Angular CLI boilerplate. |
+| No E2E tests | Info | Framework not configured. |
+| Screenshots folder missing | Low | `docs/` references `docs/screenshots/` but the folder is not in the repo. |
+| `cover-spread.png` not in repo | Info | Referenced throughout the site; may be supplied outside version control or at deploy time. |
 
 ---
 
-## 17. Related Documentation
+## 19. Related Documentation
 
 | Document | Purpose |
 |----------|---------|
-| [`blueprint.md`](./blueprint.md) | Product overview, implemented features, current plan |
-| [`GEMINI.md`](./GEMINI.md) | AI developer persona, non-negotiable Angular rules |
-| [`README.md`](./README.md) | CLI commands and getting started |
+| [`blueprint.md`](./blueprint.md) | Product overview and implemented features |
+| [`GEMINI.md`](./GEMINI.md) | AI developer persona and Angular conventions |
+| [`README.md`](./README.md) | Getting started and route overview |
+| [`docs/README.md`](./docs/README.md) | Feature notes, QA, and agent instructions |
 | [Angular docs](https://angular.dev) | Official framework reference |
-| [Angular style guide](https://angular.dev/style-guide) | Framework best practices |
 
 ---
 
-*Last updated: reflects repository state as of initial v1 — single-page app with title and feature image, Angular 20 standalone architecture.*
+*Last updated: August 2026 — multi-page prerendered site with home, about, activities, games, learn content, SEO, and Firebase deployment.*

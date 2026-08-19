@@ -1,59 +1,57 @@
-# Myapp
+# GiGi's Strolling Adventure
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.5.
+Marketing and activity site for **Strolling Adventure**, a Christian children's book by Gloria Taylor Crone. The site promotes the book, links to retailers and a YouTube music playlist, and offers free printable maze and word search puzzles plus nature learning pages inspired by walks in Yorktown, Virginia.
 
-## Development server
+**Live site:** [https://www.strollingadventure.com](https://www.strollingadventure.com)
 
-To start a local development server, run:
+## Tech stack
 
-```bash
-ng serve
-```
+| Layer | Technology |
+|-------|------------|
+| Framework | Angular 20 (standalone components, signals) |
+| Rendering | Static prerender (Angular SSR) |
+| Hosting | Firebase Hosting |
+| Language | TypeScript (strict mode) |
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Getting started
 
 ```bash
-ng generate --help
+npm install
+npm start          # http://localhost:4200
+npm run build      # production build → dist/myapp/browser
+npm test           # Karma unit tests
+npm run deploy     # build and deploy to Firebase Hosting
 ```
 
-## Building
+## Routes
 
-To build the project run:
+| Path | Page |
+|------|------|
+| `/` | Home — book cover, buy links, activities, learn preview |
+| `/about` | About the book |
+| `/about/author` | Author bio |
+| `/about/illustrators` | Illustrator credits |
+| `/activities` | Activities hub (maze and word search) |
+| `/maze` | Interactive printable maze |
+| `/wordsearch` | Interactive printable word search |
+| `/learn` | Nature topics hub |
+| `/learn/:slug` | Individual nature topic (10 topics) |
+
+## Project documentation
+
+| Document | Purpose |
+|----------|---------|
+| [`architecture.md`](./architecture.md) | System architecture, structure, and conventions |
+| [`blueprint.md`](./blueprint.md) | Product overview and implemented features |
+| [`GEMINI.md`](./GEMINI.md) | AI developer conventions for Angular |
+| [`docs/README.md`](./docs/README.md) | Feature notes, QA cases, and agent instructions |
+
+## Deployment
+
+Production builds are prerendered static HTML and deployed to Firebase Hosting:
 
 ```bash
-ng build
+npm run deploy
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Output directory: `dist/myapp/browser` (configured in `firebase.json`).
