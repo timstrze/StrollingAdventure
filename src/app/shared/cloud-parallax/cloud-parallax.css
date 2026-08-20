@@ -93,8 +93,8 @@
   position: absolute;
   height: auto;
   width: clamp(400px, 72vw, 760px);
-  top: calc(18%);
-  left: -80px;
+  top: 0;
+  left: calc(-80px - 15vw);
   user-select: none;
   -webkit-user-drag: none;
 }
@@ -128,8 +128,8 @@
 
 .cloud-md-2 {
   width: clamp(110px, 18vw, 180px);
-  top: 48%;
-  right: 22%;
+  top: 20%;
+  right: 16%;
   left: auto;
 }
 
@@ -145,12 +145,6 @@
   width: clamp(160px, 28vw, 280px);
   top: 42%;
   left: 0;
-}
-
-.cloud-lrg-2 {
-  width: clamp(150px, 26vw, 260px);
-  top: 18%;
-  right: calc(52%);
 }
 
 .cloud-lrg-3 {
