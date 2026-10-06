@@ -9,12 +9,13 @@ import {
 import { SeoService } from '../seo/seo.service';
 import { CloudParallaxBack } from '../shared/cloud-parallax/cloud-parallax-back';
 import { CloudParallaxFront } from '../shared/cloud-parallax/cloud-parallax-front';
+import { RetailerLinks } from '../shared/retailer-links/retailer-links';
 import { SiteFooter } from '../shared/site-footer/site-footer';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink, CloudParallaxBack, CloudParallaxFront, SiteFooter],
+  imports: [RouterLink, CloudParallaxBack, CloudParallaxFront, RetailerLinks, SiteFooter],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })

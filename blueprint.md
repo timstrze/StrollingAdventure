@@ -15,6 +15,7 @@
 - Parallax cloud layers with kite (back and front layers scroll at different speeds)
 - **Buy the Book** section with Barnes & Noble, Amazon, and Xulon Press links
 - **About the Book** summary with link to `/about` and YouTube playlist link
+- **School Visits** teaser with a classroom photo linking to `/school-visits`
 - **Activities** cards linking to maze and word search
 - **Explore Nature** section linking to `/learn`
 - Site footer with navigation and YouTube music link
@@ -27,6 +28,7 @@
 | `/about` | Book synopsis, themes, and purchase links |
 | `/about/author` | Gloria Taylor Crone author bio |
 | `/about/illustrators` | Illustrator credits |
+| `/school-visits` | Photos from classroom visits |
 
 All about pages use shared content-page styling and per-page SEO metadata.
 

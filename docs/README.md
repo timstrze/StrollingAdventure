@@ -33,6 +33,7 @@ Builds prerendered static output to `dist/myapp/browser` and deploys to Firebase
 |-------|------|
 | `/` | Home |
 | `/about`, `/about/author`, `/about/illustrators` | About section |
+| `/school-visits` | Classroom visit photos |
 | `/activities` | Activities hub |
 | `/maze`, `/wordsearch` | Interactive games |
 | `/learn`, `/learn/:slug` | Nature learning (10 topics) |

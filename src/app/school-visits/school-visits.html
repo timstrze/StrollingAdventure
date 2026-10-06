@@ -1,0 +1,95 @@
+<main class="content-page">
+  <a routerLink="/" class="back-link">&larr; Back to home</a>
+
+  <h1>School Visits</h1>
+
+  <p>
+    Gloria Taylor Crone and illustrator Brandy Taylor Strzelecki love sharing
+    <em>Strolling Adventure</em> with children — reading the book, singing the songs, and bringing
+    a guitar along for the stroll.
+  </p>
+
+  @for (visit of visits; track visit.slug) {
+    <h2>{{ visit.school }}</h2>
+    <p>{{ visit.date }} — {{ visit.blurb }}</p>
+
+    <div class="visit-gallery">
+      @for (photo of visit.photos; track photo.src) {
+        <button
+          type="button"
+          class="visit-photo"
+          (click)="openPhoto(photo, viewer)"
+        >
+          <img [src]="photo.src" [alt]="photo.alt" />
+        </button>
+      }
+    </div>
+  }
+
+  <section class="visit-offerings" aria-labelledby="offerings-heading">
+    <h2 id="offerings-heading">Offerings for elementary school visits</h2>
+    <p>
+      Programs below include content adjusted for grade level and run 20–30 minutes for younger
+      grades up through 2nd, 35–45 minutes for grades 3 and up.
+    </p>
+
+    <h3>It's Story Time! (for Grades Pre K — 2nd)</h3>
+    <ul>
+      <li>
+        An interactive read-aloud of <em>Strolling Adventure</em> and sing-a-long with live guitar
+      </li>
+      <li>Learn colors and numbers</li>
+      <li>Discuss what we see on the page</li>
+      <li>About 20 minutes</li>
+    </ul>
+
+    <h3>Making a Picture Book (Grades 2–5)</h3>
+    <ul>
+      <li>Intro to the book, including the original idea</li>
+      <li>Reading of the book and discussion of nature illustrated</li>
+      <li>Creative illustration process step by step</li>
+      <li>Q&amp;A</li>
+    </ul>
+
+    <h3>Virginia Natural Habitat (Grades 4–5)</h3>
+    <ul>
+      <li>Discuss some of the nature illustrated in the book</li>
+      <li>Identify ways we are connected to nature</li>
+      <li>Share ways items in the book are related to each other</li>
+      <li>Q&amp;A</li>
+    </ul>
+
+    <h3>An idea is not just an idea (Grades 2–5)</h3>
+    <ul>
+      <li>Discuss kernels of an idea when starting the storytelling process</li>
+      <li>How might we illustrate</li>
+      <li>How does illustration contribute to the telling of a story</li>
+      <li>Q&amp;A</li>
+    </ul>
+
+    <h3>Mindset of an illustrator (Grades K–5)</h3>
+    <ul>
+      <li>Who likes to draw?</li>
+      <li>Identifying audience</li>
+      <li>Sharing of the journey to define signature style</li>
+      <li>How it all comes together</li>
+      <li>Q&amp;A</li>
+    </ul>
+  </section>
+
+  <dialog
+    #viewer
+    class="visit-dialog"
+    (click)="onDialogClick($event, viewer)"
+    (close)="selected.set(null)"
+  >
+    @if (selected(); as photo) {
+      <img [src]="photo.src" [alt]="photo.alt" />
+      <form method="dialog">
+        <button type="submit" class="visit-dialog-close">Close</button>
+      </form>
+    }
+  </dialog>
+
+  <app-site-footer />
+</main>

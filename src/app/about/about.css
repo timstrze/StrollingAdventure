@@ -1,1 +1,72 @@
-/* About-specific overrides if needed */
+.about-music-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1.25rem 1.75rem;
+  align-items: start;
+  margin: 1.25rem 0 0.5rem;
+}
+
+.about-music-copy p {
+  margin: 0.85rem 0 0;
+}
+
+.content-page h2.about-music-heading {
+  margin: 0 0 0.85rem;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(1.6rem, 4vw, 2.35rem);
+  font-weight: 400;
+  font-style: normal;
+  letter-spacing: 0;
+  line-height: 1.15;
+  text-transform: none;
+  color: var(--gray-900);
+}
+
+.about-discover-bird {
+  display: block;
+  width: clamp(110px, 28vw, 180px);
+  height: auto;
+  margin: 0;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.youtube-button {
+  display: flex;
+  width: fit-content;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  margin: 0;
+  padding: 0.85rem 1.4rem;
+  border-radius: 0.85rem;
+  background: #fff;
+  color: var(--gray-900);
+  font-size: 1.125rem;
+  font-weight: 500;
+  letter-spacing: -0.01rem;
+  line-height: 1.2;
+  text-decoration: none;
+  transition: transform 0.15s ease;
+}
+
+@media screen and (max-width: 650px) {
+  .about-music-row {
+    grid-template-columns: 1fr;
+  }
+
+  .about-discover-bird {
+    margin: 0 auto;
+  }
+}
+
+.youtube-button:hover {
+  transform: translateY(-1px);
+  text-decoration: none;
+}
+
+.youtube-icon {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+}

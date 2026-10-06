@@ -2,6 +2,7 @@
 /about
 /about/author
 /about/illustrators
+/school-visits
 /activities
 /maze
 /wordsearch

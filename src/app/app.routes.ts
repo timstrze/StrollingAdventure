@@ -9,12 +9,14 @@ import { ActivitiesPage } from './activities/activities';
 import { LearnHub } from './learn/learn-hub';
 import { LearnTopic } from './learn/learn-topic';
 import { LEARN_SLUGS } from './learn/topics';
+import { SchoolVisits } from './school-visits/school-visits';
 
 export const routes: Routes = [
   { path: '', component: Home },
   { path: 'about', component: About },
   { path: 'about/author', component: Author },
   { path: 'about/illustrators', component: Illustrators },
+  { path: 'school-visits', component: SchoolVisits },
   { path: 'activities', component: ActivitiesPage },
   { path: 'maze', component: Maze },
   { path: 'wordsearch', component: WordSearch },
@@ -28,6 +30,7 @@ export const PRERENDER_ROUTES = [
   '/about',
   '/about/author',
   '/about/illustrators',
+  '/school-visits',
   '/activities',
   '/maze',
   '/wordsearch',

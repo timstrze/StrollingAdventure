@@ -54,15 +54,15 @@
 }
 
 h1 {
-  font-size: 2rem;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(2.25rem, 8vw, 4.5rem);
+  font-weight: 400;
+  font-style: normal;
+  letter-spacing: 0;
+  line-height: 1.15;
+  text-transform: none;
   color: var(--gray-900);
-  font-weight: 500;
-  line-height: 110%;
-  letter-spacing: -0.05rem;
   margin: 0 0 0.5rem;
-  font-family: "Inter Tight", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-    "Segoe UI Symbol";
 }
 
 .sub {
@@ -399,10 +399,6 @@ button.control-card:hover .control-arrow {
 
 /* Touch devices: bigger tap targets; 16px inputs stop iOS Safari auto-zoom */
 @media (pointer: coarse) {
-  h1 {
-    font-size: 2.25rem;
-  }
-
   .sub,
   .score,
   .back-link,

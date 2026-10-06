@@ -1,0 +1,106 @@
+:host {
+  --bright-blue: oklch(51.01% 0.274 263.83);
+  --french-violet: oklch(47.66% 0.246 305.88);
+  --orange-red: oklch(63.32% 0.24 31.68);
+  --gray-900: oklch(19.37% 0.006 300.98);
+
+  display: block;
+  width: 100%;
+}
+
+.buy-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+  width: 100%;
+}
+
+.buy-heading {
+  margin: 0;
+  text-align: center;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  font-size: clamp(1.3rem, 3.6vw, 1.75rem);
+  font-weight: 600;
+  font-style: normal;
+  letter-spacing: 0;
+  line-height: 1.15;
+  text-transform: none;
+  color: var(--gray-900);
+}
+
+.buy-links {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.retailer-link {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  padding: 1.2rem 1.35rem;
+  border-radius: 0.95rem;
+  border: none;
+  outline: none;
+  background: #fff;
+  color: var(--gray-900);
+  text-align: left;
+  text-decoration: none;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.retailer-link:hover {
+  background: #fff;
+  transform: translateY(-1px);
+}
+
+.retailer-link:focus-visible {
+  outline: none;
+}
+
+.retailer-link:nth-child(1) {
+  --retailer-accent: var(--french-violet);
+}
+
+.retailer-link:nth-child(2) {
+  --retailer-accent: var(--bright-blue);
+}
+
+.retailer-link:nth-child(3) {
+  --retailer-accent: var(--orange-red);
+}
+
+.retailer-name {
+  font-size: 1.0625rem;
+  font-weight: 500;
+  letter-spacing: -0.01rem;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.retailer-icon {
+  flex-shrink: 0;
+  height: 30px;
+  width: 30px;
+  color: var(--retailer-accent);
+}
+
+.retailer-icon-amazon {
+  transform: translateY(1px);
+}
+
+@media screen and (max-width: 650px) {
+  .buy-links {
+    flex-direction: column;
+    width: min(22rem, 100%);
+    margin-inline: auto;
+  }
+}

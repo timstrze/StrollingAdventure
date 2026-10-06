@@ -32,11 +32,15 @@
 }
 
 .content-page h1 {
-  font-size: clamp(1.5rem, 5vw, 2rem);
-  font-weight: 600;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(2.25rem, 8vw, 4.5rem);
+  font-weight: 400;
+  font-style: normal;
+  letter-spacing: 0;
+  line-height: 1.15;
+  text-transform: none;
   color: var(--gray-900);
   margin: 0 0 1rem;
-  letter-spacing: -0.02rem;
 }
 
 .content-page h2 {
@@ -55,7 +59,7 @@
   margin: 0 0 1rem;
 }
 
-.content-page a:not(.back-link):not(.card-link) {
+.content-page a:not(.back-link):not(.card-link):not(.youtube-button) {
   color: var(--activity-accent);
 }
 
@@ -147,4 +151,9 @@
 
 .text-link:hover {
   text-decoration: underline;
+}
+
+app-retailer-links {
+  display: block;
+  margin: 1.25rem 0 2rem;
 }

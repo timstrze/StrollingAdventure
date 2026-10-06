@@ -31,6 +31,7 @@ npm run deploy     # build and deploy to Firebase Hosting
 | `/about` | About the book |
 | `/about/author` | Author bio |
 | `/about/illustrators` | Illustrator credits |
+| `/school-visits` | Classroom visit photos |
 | `/activities` | Activities hub (maze and word search) |
 | `/maze` | Interactive printable maze |
 | `/wordsearch` | Interactive printable word search |

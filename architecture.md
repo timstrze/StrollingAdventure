@@ -185,6 +185,7 @@ Routes are defined in `src/app/app.routes.ts`:
 | `about` | `About` | Book overview |
 | `about/author` | `Author` | Author page |
 | `about/illustrators` | `Illustrators` | Illustrator credits |
+| `school-visits` | `SchoolVisits` | Classroom visit gallery |
 | `activities` | `ActivitiesPage` | Activities hub |
 | `maze` | `Maze` | Maze game |
 | `wordsearch` | `WordSearch` | Word search game |
@@ -206,6 +207,7 @@ All page components are **eagerly imported** (not lazy-loaded). The app is small
 |-----------|------------------|-------|
 | `Home` | Cloud parallax, SiteFooter, SeoService | Buy links, activity cards, learn preview |
 | `About`, `Author`, `Illustrators` | SiteFooter, SeoService, content-page CSS | About section pages |
+| `SchoolVisits` | SiteFooter, SeoService, visits.ts | Photo gallery of classroom visits |
 | `ActivitiesPage` | SiteFooter, SeoService | Links to games |
 | `Maze` | Canvas, game-scores, SeoService | Difficulty levels, scoring, print |
 | `WordSearch` | game-scores, SeoService | Grid generation, selection, print |
@@ -215,7 +217,7 @@ All page components are **eagerly imported** (not lazy-loaded). The app is small
 
 | Component | Purpose |
 |-----------|---------|
-| `SiteFooter` | Footer nav (About, Author, Activities, Learn, Music, Buy) |
+| `SiteFooter` | Footer nav (About, Author, School Visits, Activities, Learn, Music, Buy) |
 | `CloudParallaxBack` | Background cloud layer (homepage) |
 | `CloudParallaxFront` | Foreground cloud layer with kite (homepage) |
 

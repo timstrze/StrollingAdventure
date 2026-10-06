@@ -10,7 +10,13 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 0.5rem 1.25rem;
-  margin-bottom: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+app-retailer-links {
+  display: block;
+  margin: 0 auto 1.25rem;
+  max-width: 40rem;
 }
 
 .site-footer-nav a {
@@ -27,6 +33,6 @@
 
 .site-footer-url {
   font-size: 0.75rem;
-  color: var(--gray-400);
+  color: var(--gray-700);
   margin: 0;
 }
